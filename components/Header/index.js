@@ -5,6 +5,9 @@ import React, { useEffect, useState } from "react";
 import Button from "../Button";
 // Local Data
 import data from "../../data/portfolio.json";
+import logo from "../../public/b3bd80c2-d7fc-4c8b-a89d-def3a7f5efc2.png"
+
+
 
 const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
   const router = useRouter();
@@ -127,7 +130,12 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
           onClick={() => router.push("/")}
           className="font-medium cursor-pointer mob:p-2 laptop:p-0"
         >
-          {name}.
+          {/* {name}. */}
+          {/* <img src={logo}></img> */}
+          <img
+                  className="h-10"
+                  src={`/images/${theme === "dark" ? "sg-white.svg" : "sg-dark.svg"}`}
+          ></img>
         </h1>
         {!isBlog ? (
           <div className="flex">
