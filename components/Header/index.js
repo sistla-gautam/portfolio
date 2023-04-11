@@ -80,7 +80,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   {showResume && (
                     <Button
                       onClick={() =>
-                        window.open("mailto:hello@chetanverma.com")
+                        window.open("https://drive.google.com/file/d/1fWl5f4e71zkm3swt65-CDLHMCifPSPU7/view?usp=share_link", "_blank")
                       }
                     >
                       Resume
@@ -103,7 +103,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   )}
                   {showResume && (
                     <Button
-                      onClick={() => router.push("/resume")}
+                      onClick={() => window.open("https://drive.google.com/file/d/1fWl5f4e71zkm3swt65-CDLHMCifPSPU7/view?usp=share_link", "_blank")}
                       classes="first:ml-1"
                     >
                       Resume
@@ -146,7 +146,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
             )}
             {showResume && (
               <Button
-                onClick={() => router.push("/resume")}
+                onClick={() => window.open("https://drive.google.com/file/d/1fWl5f4e71zkm3swt65-CDLHMCifPSPU7/view?usp=share_link", "_blank")}
                 classes="first:ml-1"
               >
                 Resume
@@ -175,7 +175,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
             )}
             {showResume && (
               <Button
-                onClick={() => router.push("/resume")}
+                onClick={() => window.open("https://drive.google.com/file/d/1fWl5f4e71zkm3swt65-CDLHMCifPSPU7/view?usp=share_link", "_blank")}
                 classes="first:ml-1"
               >
                 Resume
