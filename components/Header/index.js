@@ -5,9 +5,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../Button";
 // Local Data
 import data from "../../data/portfolio.json";
-import logo from "../../public/b3bd80c2-d7fc-4c8b-a89d-def3a7f5efc2.png"
-
-
+import logo from "../../public/b3bd80c2-d7fc-4c8b-a89d-def3a7f5efc2.png";
 
 const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
   const router = useRouter();
@@ -80,7 +78,10 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   {showResume && (
                     <Button
                       onClick={() =>
-                        window.open("https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing", "_blank")
+                        window.open(
+                          "https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing",
+                          "_blank"
+                        )
                       }
                     >
                       Resume
@@ -88,7 +89,9 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   )}
 
                   <Button
-                    onClick={() => window.open("mailto:sistlagautham@gmail.com")}
+                    onClick={() =>
+                      window.open("mailto:sistlagautham@gmail.com")
+                    }
                   >
                     Contact
                   </Button>
@@ -103,7 +106,12 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   )}
                   {showResume && (
                     <Button
-                      onClick={() => window.open("https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing", "_blank")}
+                      onClick={() =>
+                        window.open(
+                          "https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing",
+                          "_blank"
+                        )
+                      }
                       classes="first:ml-1"
                     >
                       Resume
@@ -111,7 +119,9 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                   )}
 
                   <Button
-                    onClick={() => window.open("mailto:sistlagautham@gmail.com")}
+                    onClick={() =>
+                      window.open("mailto:sistlagautham@gmail.com")
+                    }
                   >
                     Contact
                   </Button>
@@ -128,14 +138,15 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
       >
         <h1
           onClick={() => router.push("/")}
-          className="font-medium cursor-pointer mob:p-2 laptop:p-0"
+          className={`"transition-all duration-500 hover:scale-110 ease-in-out grayscale hover:grayscale-0 text-3xl font-medium mob:p-2 laptop:p-0 bg-clip-text ${
+            theme === "dark" ? "text-[#E56399]" : "text-[#3C91E6]"
+          }`}
         >
-          {/* {name}. */}
-          {/* <img src={logo}></img> */}
-          <img
+          {name}.{/* <img src={logo}></img> */}
+          {/* <img
                   className="h-10"
                   src={`/images/${theme === "dark" ? "sg-white.svg" : "sg-dark.svg"}`}
-          ></img>
+          ></img> */}
         </h1>
         {!isBlog ? (
           <div className="flex">
@@ -146,14 +157,21 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
             )}
             {showResume && (
               <Button
-                onClick={() => window.open("https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing", "_blank")}
+                onClick={() =>
+                  window.open(
+                    "https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing",
+                    "_blank"
+                  )
+                }
                 classes="first:ml-1"
               >
                 Resume
               </Button>
             )}
 
-            <Button onClick={() => window.open("mailto:sistlagautham@gmail.com")}>
+            <Button
+              onClick={() => window.open("mailto:sistlagautham@gmail.com")}
+            >
               Contact
             </Button>
             {mounted && theme && data.darkMode && (
@@ -175,14 +193,21 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
             )}
             {showResume && (
               <Button
-                onClick={() => window.open("https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing", "_blank")}
+                onClick={() =>
+                  window.open(
+                    "https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing",
+                    "_blank"
+                  )
+                }
                 classes="first:ml-1"
               >
                 Resume
               </Button>
             )}
 
-            <Button onClick={() => window.open("mailto:sistlagautham@gmail.com")}>
+            <Button
+              onClick={() => window.open("mailto:sistlagautham@gmail.com")}
+            >
               Contact
             </Button>
 
