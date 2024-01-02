@@ -79,7 +79,7 @@ const Header = ({ handleWorkScroll, handleAboutScroll, isBlog }) => {
                     <Button
                       onClick={() =>
                         window.open(
-                          "https://drive.google.com/file/d/1yog-aPYruRrJyTXdYqeOcezajtm5tn6v/view?usp=sharing",
+                          "https://drive.google.com/file/d/1-xbBnso4DanGZiGuX6wpMDSmOGhCDm9N/view?usp=sharing",
                           "_blank"
                         )
                       }
