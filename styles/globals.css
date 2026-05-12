@@ -9,6 +9,21 @@
   font-family: "League Spartan";
 }
 
+@keyframes theme-wipe-in {
+  from { clip-path: circle(0% at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
+  to   { clip-path: circle(150vmax at var(--wipe-x, 50%) var(--wipe-y, 50%)); }
+}
+
+::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  animation: theme-wipe-in 0.6s cubic-bezier(0.76, 0, 0.24, 1) both;
+  z-index: 2;
+}
+
 body {
   @apply dark:bg-black dark:text-white;
 }

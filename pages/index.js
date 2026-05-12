@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Head from "next/head";
@@ -25,6 +26,8 @@ export default function Home() {
   const heroRef = useRef();
   const [current, setCurrent] = useState(0);
   const [seen, setSeen] = useState(new Set([0]));
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const goNext = useCallback(() => setCurrent(p => Math.min(TOTAL - 1, p + 1)), []);
   const goPrev = useCallback(() => setCurrent(p => Math.max(0, p - 1)), []);
@@ -133,29 +136,29 @@ export default function Home() {
       </motion.div>
 
       {/* ── Section nav ──────────────────────────────────────── */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+      <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-full border shadow-md ${isDark ? "bg-white border-neutral-200 text-black" : "bg-neutral-900 border-neutral-700 text-white"}`}>
         <motion.button
           onClick={goPrev}
-          animate={{ opacity: hasPrev ? 0.45 : 0.15 }}
-          whileHover={{ opacity: hasPrev ? 1 : 0.15 }}
+          animate={{ opacity: hasPrev ? 0.5 : 0.2 }}
+          whileHover={{ opacity: hasPrev ? 1 : 0.2 }}
           transition={{ duration: 0.2 }}
           style={{ pointerEvents: hasPrev ? "auto" : "none" }}
           aria-label="Previous section"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </motion.button>
 
         {LABELS.map((label, i) => (
           <React.Fragment key={i}>
-            {i > 0 && <span className="opacity-20 text-xs select-none">|</span>}
+            {i > 0 && <span className="opacity-20 text-sm select-none">|</span>}
             <motion.button
               onClick={() => goTo(i)}
-              animate={{ opacity: current === i ? 1 : 0.3 }}
-              whileHover={{ opacity: current === i ? 1 : 0.6 }}
+              animate={{ opacity: current === i ? 1 : 0.55 }}
+              whileHover={{ opacity: current === i ? 1 : 0.8 }}
               transition={{ duration: 0.2 }}
-              className="text-xs uppercase tracking-widest px-1"
+              className="text-sm uppercase tracking-widest px-1"
             >
               {label}
             </motion.button>
@@ -164,13 +167,13 @@ export default function Home() {
 
         <motion.button
           onClick={goNext}
-          animate={{ opacity: hasNext ? 0.45 : 0.15 }}
-          whileHover={{ opacity: hasNext ? 1 : 0.15 }}
+          animate={{ opacity: hasNext ? 0.5 : 0.2 }}
+          whileHover={{ opacity: hasNext ? 1 : 0.2 }}
           transition={{ duration: 0.2 }}
           style={{ pointerEvents: hasNext ? "auto" : "none" }}
           aria-label="Next section"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 18l6-6-6-6" />
           </svg>
         </motion.button>

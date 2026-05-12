@@ -7,7 +7,7 @@ const App = ({ Component, pageProps }) => {
   const [loaderDone, setLoaderDone] = useState(false);
 
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       {!loaderDone && <Loader onDone={() => setLoaderDone(true)} />}
       <Component {...pageProps} />
     </ThemeProvider>
