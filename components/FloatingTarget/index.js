@@ -1,8 +1,11 @@
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 
 const COLS = 24;
 const ROWS = 14;
 const COUNT = COLS * ROWS;
+const LERP = 0.18;
+const LINE_LENGTH_RATIO = 0.45;
 
 function lerpAngle(a, b, t) {
   let diff = b - a;
@@ -12,41 +15,70 @@ function lerpAngle(a, b, t) {
 }
 
 export default function MagneticFilings({ sectionRef }) {
-  const containerRef = useRef();
+  const canvasRef = useRef();
   const anglesRef = useRef(new Float32Array(COUNT));
   const mouseRef = useRef({ x: null, y: null });
-  const cellsRef = useRef([]);
   const rafRef = useRef();
+  const { resolvedTheme } = useTheme();
+  const themeRef = useRef(resolvedTheme);
+
+  useEffect(() => {
+    themeRef.current = resolvedTheme;
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const section = sectionRef?.current;
-    if (!section) return;
+    const canvas = canvasRef.current;
+    if (!section || !canvas) return;
 
     const onMove = (e) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
-
     section.addEventListener("mousemove", onMove);
 
+    const resize = () => {
+      canvas.width = section.offsetWidth;
+      canvas.height = section.offsetHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
     const tick = () => {
-      const container = containerRef.current;
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
       const { x: mx, y: my } = mouseRef.current;
 
-      if (container && mx !== null) {
-        const rect = container.getBoundingClientRect();
-        const cellW = rect.width / COLS;
-        const cellH = rect.height / ROWS;
+      ctx.clearRect(0, 0, w, h);
 
-        for (let i = 0; i < COUNT; i++) {
-          const col = i % COLS;
-          const row = (i / COLS) | 0;
-          const cx = rect.left + (col + 0.5) * cellW;
-          const cy = rect.top + (row + 0.5) * cellH;
+      const isDark = themeRef.current !== "light";
+      ctx.strokeStyle = isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)";
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = "round";
+
+      const cellW = w / COLS;
+      const cellH = h / ROWS;
+      const halfLen = Math.min(cellW, cellH) * LINE_LENGTH_RATIO;
+
+      for (let i = 0; i < COUNT; i++) {
+        const col = i % COLS;
+        const row = (i / COLS) | 0;
+        const cx = (col + 0.5) * cellW;
+        const cy = (row + 0.5) * cellH;
+
+        if (mx !== null) {
           const target = Math.atan2(my - cy, mx - cx) * (180 / Math.PI);
-          anglesRef.current[i] = lerpAngle(anglesRef.current[i], target, 0.18);
-          const el = cellsRef.current[i];
-          if (el) el.style.transform = `rotate(${anglesRef.current[i]}deg)`;
+          anglesRef.current[i] = lerpAngle(anglesRef.current[i], target, LERP);
         }
+
+        const rad = anglesRef.current[i] * (Math.PI / 180);
+        const dx = Math.cos(rad) * halfLen;
+        const dy = Math.sin(rad) * halfLen;
+
+        ctx.beginPath();
+        ctx.moveTo(cx - dx, cy - dy);
+        ctx.lineTo(cx + dx, cy + dy);
+        ctx.stroke();
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -56,41 +88,19 @@ export default function MagneticFilings({ sectionRef }) {
 
     return () => {
       section.removeEventListener("mousemove", onMove);
+      window.removeEventListener("resize", resize);
       cancelAnimationFrame(rafRef.current);
     };
   }, [sectionRef]);
 
   return (
-    <div
-      ref={containerRef}
+    <canvas
+      ref={canvasRef}
       style={{
         position: "absolute",
         inset: 0,
-        display: "grid",
-        gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-        gridTemplateRows: `repeat(${ROWS}, 1fr)`,
         pointerEvents: "none",
       }}
-    >
-      {Array.from({ length: COUNT }, (_, i) => (
-        <div
-          key={i}
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <div
-            ref={el => { cellsRef.current[i] = el; }}
-            style={{
-              width: "55%",
-              height: "1.5px",
-              background: "currentColor",
-              opacity: 0.35,
-              borderRadius: "1px",
-              transformOrigin: "center 50%",
-              willChange: "transform",
-            }}
-          />
-        </div>
-      ))}
-    </div>
+    />
   );
 }
