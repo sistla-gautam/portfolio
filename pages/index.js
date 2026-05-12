@@ -1,142 +1,188 @@
-import { useRef } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
+import { motion } from "framer-motion";
 import Header from "../components/Header";
-import ServiceCard from "../components/ServiceCard";
-import Socials from "../components/Socials";
-import WorkCard from "../components/WorkCard";
-import { useIsomorphicLayoutEffect } from "../utils";
-import { stagger } from "../animations";
 import Footer from "../components/Footer";
 import Head from "next/head";
 import Button from "../components/Button";
 import Link from "next/link";
 import Cursor from "../components/Cursor";
+import FloatingTarget from "../components/FloatingTarget";
+import WorkList from "../components/WorkList";
 
-// Local Data
 import data from "../data/portfolio.json";
 
+const TOTAL = 4;
+const EASE = [0.76, 0, 0.24, 1];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+
+const LABELS = ["home", "work", "about", "contact"];
+
 export default function Home() {
-  // Ref
-  const workRef = useRef();
-  const aboutRef = useRef();
-  const textOne = useRef();
-  const textTwo = useRef();
-  const textThree = useRef();
-  const textFour = useRef();
+  const heroRef = useRef();
+  const [current, setCurrent] = useState(0);
+  const [seen, setSeen] = useState(new Set([0]));
 
-  // Handling Scroll
-  const handleWorkScroll = () => {
-    window.scrollTo({
-      top: workRef.current.offsetTop,
-      left: 0,
-      behavior: "smooth",
-    });
-  };
+  const goNext = useCallback(() => setCurrent(p => Math.min(TOTAL - 1, p + 1)), []);
+  const goPrev = useCallback(() => setCurrent(p => Math.max(0, p - 1)), []);
+  const goTo   = useCallback((i) => setCurrent(Math.max(0, Math.min(TOTAL - 1, i))), []);
 
-  const handleAboutScroll = () => {
-    window.scrollTo({
-      top: aboutRef.current.offsetTop,
-      left: 0,
-      behavior: "smooth",
-    });
-  };
+  useEffect(() => {
+    setSeen(prev => new Set([...prev, current]));
+  }, [current]);
 
-  useIsomorphicLayoutEffect(() => {
-    stagger(
-      [textOne.current, textTwo.current, textThree.current, textFour.current],
-      { y: 40, x: -10, transform: "scale(0.95) skew(10deg)" },
-      { y: 0, x: 0, transform: "scale(1)" }
-    );
-  }, []);
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowDown" || (e.key === " " && !e.shiftKey)) {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowUp" || (e.key === " " && e.shiftKey)) {
+        e.preventDefault();
+        goPrev();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goNext, goPrev]);
+
+  const hasPrev = current > 0;
+  const hasNext = current < TOTAL - 1;
 
   return (
-    <div className={`relative ${data.showCursor && "cursor-none"}`}>
+    <div className={`relative h-screen overflow-hidden ${data.showCursor && "cursor-none"}`}>
       {data.showCursor && <Cursor />}
       <Head>
         <title>{data.name}</title>
       </Head>
 
-      <div className="gradient-circle"></div>
-      <div className="gradient-circle-bottom"></div>
+      <Header />
 
-      <div className="container mx-auto mb-10">
-        <Header
-          handleWorkScroll={handleWorkScroll}
-          handleAboutScroll={handleAboutScroll}
-        />
-        <div className="laptop:mt-20 mt-10">
-          <div className="mt-5">
-            <h1
-              ref={textOne}
-              className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-4/5 mob:w-full laptop:w-4/5"
-            >
-              {data.headerTaglineOne}
-            </h1>
-            <h1
-              ref={textTwo}
-              className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5"
-            >
-              {data.headerTaglineTwo}
-            </h1>
-            <h1
-              ref={textThree}
-              className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5"
-            >
-              {data.headerTaglineThree}
-            </h1>
-            <h1
-              ref={textFour}
-              className="text-3xl tablet:text-6xl laptop:text-6xl laptopl:text-8xl p-1 tablet:p-2 text-bold w-full laptop:w-4/5"
-            >
-              {data.headerTaglineFour}
-            </h1>
-          </div>
+      {/* ── Sliding sections ─────────────────────────────────── */}
+      <motion.div
+        animate={{ y: `${-current * 100}vh` }}
+        transition={{ duration: 0.8, ease: EASE }}
+      >
 
-          <Socials className="mt-2 laptop:mt-5" />
-        </div>
-        <div className="mt-10 laptop:mt-30 p-2 laptop:p-0" ref={workRef}>
-          <h1 className="text-2xl text-bold">Work.</h1>
+        {/* ── Hero ─────────────────────────────────────────────── */}
+        <section
+          ref={heroRef}
+          className="relative h-screen flex flex-col overflow-hidden"
+        >
+          <motion.h1
+            className="absolute inset-0 flex items-center justify-center font-black uppercase tracking-tighter pointer-events-none select-none"
+            style={{ fontSize: "clamp(4rem, 12vw, 11rem)" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, ease: EASE }}
+          >
+            {data.name}
+          </motion.h1>
 
-          <div className="mt-5 laptop:mt-10 grid grid-cols-1 tablet:grid-cols-2 gap-4">
-            {data.projects.map((project) => (
-              <WorkCard
-                key={project.id}
-                img={project.imageSrc}
-                name={project.title}
-                description={project.description}
-                onClick={() => window.open(project.url)}
-              />
-            ))}
-          </div>
-        </div>
+          <FloatingTarget sectionRef={heroRef} />
+        </section>
 
-        <div className="mt-10 laptop:mt-30 p-2 laptop:p-0">
-          <h1 className="tablet:m-10 text-2xl text-bold">Skills</h1>
-          <div className="mt-5 tablet:m-10 grid grid-cols-1 laptop:grid-cols-2 gap-6">
-            {data.services.map((service, index) => (
-              <ServiceCard
-                key={index}
-                name={service.title}
-                description={service.description}
-              />
-            ))}
+        {/* ── Work ─────────────────────────────────────────────── */}
+        <section className="h-screen overflow-hidden flex flex-col justify-center">
+          <div className="container mx-auto p-2 laptop:p-0">
+            <motion.h2
+              className="text-2xl font-bold mb-6 laptop:mb-8"
+              initial={{ opacity: 0, y: 16 }}
+              animate={seen.has(1) ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              transition={{ duration: 0.5, ease: EASE }}
+            >
+              Work.
+            </motion.h2>
+            <WorkList organizations={data.organizations ?? []} isVisible={seen.has(1)} />
           </div>
-        </div>
-        {/* This button should not go into production */}
-        {process.env.NODE_ENV === "development" && (
-          <div className="fixed bottom-5 right-5">
-            <Link href="/edit">
-              <Button type="primary">Edit Data</Button>
-            </Link>
+        </section>
+
+        {/* ── About ────────────────────────────────────────────── */}
+        <motion.section
+          className="h-screen overflow-hidden flex items-center"
+          initial="hidden"
+          animate={seen.has(2) ? "visible" : "hidden"}
+        >
+          <div className="container mx-auto p-2 laptop:p-0">
+            <motion.h1 variants={fadeUp} className="tablet:m-10 text-2xl text-bold">
+              About.
+            </motion.h1>
+            <motion.p
+              variants={fadeUp}
+              className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5"
+            >
+              {data.aboutpara}
+            </motion.p>
           </div>
-        )}
-        <div className="mt-10 laptop:mt-40 p-2 laptop:p-0" ref={aboutRef}>
-          <h1 className="tablet:m-10 text-2xl text-bold">About.</h1>
-          <p className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5">
-            {data.aboutpara}
-          </p>
-        </div>
-        <Footer />
+        </motion.section>
+
+        {/* ── Contact ──────────────────────────────────────────── */}
+        <motion.section
+          className="h-screen overflow-hidden flex items-center"
+          initial="hidden"
+          animate={seen.has(3) ? "visible" : "hidden"}
+        >
+          <div className="container mx-auto p-2 laptop:p-0">
+            <motion.div variants={fadeUp}>
+              <Footer />
+            </motion.div>
+          </div>
+        </motion.section>
+      </motion.div>
+
+      {/* ── Section nav ──────────────────────────────────────── */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2">
+        <motion.button
+          onClick={goPrev}
+          animate={{ opacity: hasPrev ? 0.45 : 0.15 }}
+          whileHover={{ opacity: hasPrev ? 1 : 0.15 }}
+          transition={{ duration: 0.2 }}
+          style={{ pointerEvents: hasPrev ? "auto" : "none" }}
+          aria-label="Previous section"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </motion.button>
+
+        {LABELS.map((label, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <span className="opacity-20 text-xs select-none">|</span>}
+            <motion.button
+              onClick={() => goTo(i)}
+              animate={{ opacity: current === i ? 1 : 0.3 }}
+              whileHover={{ opacity: current === i ? 1 : 0.6 }}
+              transition={{ duration: 0.2 }}
+              className="text-xs uppercase tracking-widest px-1"
+            >
+              {label}
+            </motion.button>
+          </React.Fragment>
+        ))}
+
+        <motion.button
+          onClick={goNext}
+          animate={{ opacity: hasNext ? 0.45 : 0.15 }}
+          whileHover={{ opacity: hasNext ? 1 : 0.15 }}
+          transition={{ duration: 0.2 }}
+          style={{ pointerEvents: hasNext ? "auto" : "none" }}
+          aria-label="Next section"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </motion.button>
       </div>
+
+      {process.env.NODE_ENV === "development" && (
+        <div className="fixed bottom-5 right-16 z-50">
+          <Link href="/edit">
+            <Button type="primary">Edit Data</Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

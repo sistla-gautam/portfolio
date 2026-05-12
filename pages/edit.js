@@ -193,6 +193,12 @@ const Edit = () => {
               Social
             </Button>
             <Button
+              onClick={() => setCurrentTabs("WORK")}
+              type={currentTabs === "WORK" && "primary"}
+            >
+              Work
+            </Button>
+            <Button
               onClick={() => setCurrentTabs("RESUME")}
               type={currentTabs === "RESUME" && "primary"}
             >
@@ -544,6 +550,99 @@ const Edit = () => {
             <div className="my-10">
               <Button onClick={addSocials} type="primary">
                 Add Social +
+              </Button>
+            </div>
+          </div>
+        )}
+        {currentTabs === "WORK" && (
+          <div className="mt-10">
+            <h1 className="text-2xl">Work Experience</h1>
+            <div className="mt-6">
+              {(data.organizations ?? []).map((org, index) => (
+                <div key={org.id ?? index} className="mt-8 pb-8 border-b">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl">{org.name} — {org.role}</h2>
+                    <Button
+                      onClick={() =>
+                        setData({
+                          ...data,
+                          organizations: (data.organizations ?? []).filter((_, i) => i !== index),
+                        })
+                      }
+                      type="primary"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                  <div className="flex items-center mt-3">
+                    <label className="w-1/5 text-lg opacity-50">Company</label>
+                    <input
+                      value={org.name ?? ""}
+                      onChange={(e) => {
+                        const updated = [...(data.organizations ?? [])];
+                        updated[index] = { ...org, name: e.target.value };
+                        setData({ ...data, organizations: updated });
+                      }}
+                      className="w-4/5 ml-10 p-2 rounded-md shadow-lg border-2"
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex items-center mt-3">
+                    <label className="w-1/5 text-lg opacity-50">Role</label>
+                    <input
+                      value={org.role ?? ""}
+                      onChange={(e) => {
+                        const updated = [...(data.organizations ?? [])];
+                        updated[index] = { ...org, role: e.target.value };
+                        setData({ ...data, organizations: updated });
+                      }}
+                      className="w-4/5 ml-10 p-2 rounded-md shadow-lg border-2"
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex items-center mt-3">
+                    <label className="w-1/5 text-lg opacity-50">Period</label>
+                    <input
+                      value={org.period ?? ""}
+                      onChange={(e) => {
+                        const updated = [...(data.organizations ?? [])];
+                        updated[index] = { ...org, period: e.target.value };
+                        setData({ ...data, organizations: updated });
+                      }}
+                      className="w-4/5 ml-10 p-2 rounded-md shadow-lg border-2"
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex items-center mt-3">
+                    <label className="w-1/5 text-lg opacity-50">Description</label>
+                    <textarea
+                      value={org.description ?? ""}
+                      onChange={(e) => {
+                        const updated = [...(data.organizations ?? [])];
+                        updated[index] = { ...org, description: e.target.value };
+                        setData({ ...data, organizations: updated });
+                      }}
+                      className="w-4/5 ml-10 p-2 rounded-md shadow-lg border-2"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <Button
+                type="primary"
+                onClick={() =>
+                  setData({
+                    ...data,
+                    organizations: [
+                      ...(data.organizations ?? []),
+                      { id: uuidv4(), name: "Company", role: "Role", period: "Enter period", description: "Enter description" },
+                    ],
+                  })
+                }
+              >
+                Add Experience +
               </Button>
             </div>
           </div>
