@@ -9,6 +9,7 @@ import Link from "next/link";
 import Cursor from "../components/Cursor";
 import FloatingTarget from "../components/FloatingTarget";
 import WorkList from "../components/WorkList";
+import AboutSection from "../components/AboutSection";
 
 import data from "../data/portfolio.json";
 
@@ -103,23 +104,9 @@ export default function Home() {
         </section>
 
         {/* ── About ────────────────────────────────────────────── */}
-        <motion.section
-          className="h-screen overflow-hidden flex items-center"
-          initial="hidden"
-          animate={seen.has(2) ? "visible" : "hidden"}
-        >
-          <div className="container mx-auto p-2 laptop:p-0">
-            <motion.h1 variants={fadeUp} className="tablet:m-10 text-2xl text-bold">
-              About.
-            </motion.h1>
-            <motion.p
-              variants={fadeUp}
-              className="tablet:m-10 mt-2 text-xl laptop:text-3xl w-full laptop:w-3/5"
-            >
-              {data.aboutpara}
-            </motion.p>
-          </div>
-        </motion.section>
+        <section className="h-screen overflow-hidden flex items-center">
+          <AboutSection isVisible={seen.has(2)} isDark={isDark} />
+        </section>
 
         {/* ── Contact ──────────────────────────────────────────── */}
         <motion.section

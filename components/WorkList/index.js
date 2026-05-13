@@ -23,32 +23,32 @@ export default function WorkList({ organizations, isVisible }) {
           >
             {/* Row */}
             <motion.div
-              className="flex items-center gap-6 laptop:gap-10 py-5 laptop:py-7 px-3 laptop:px-6 cursor-default rounded-lg transition-colors duration-200 hover:bg-neutral-100/5 dark:hover:bg-white/[0.03]"
+              className="flex items-center gap-6 laptop:gap-10 py-5 laptop:py-7 px-3 laptop:px-6 cursor-default rounded-lg transition-colors duration-200 hover:bg-neutral-900/5 dark:hover:bg-white/[0.03]"
               whileHover={{ x: 6 }}
               transition={{ duration: 0.25, ease: EASE }}
             >
               {/* Index */}
-              <span className="text-xs w-6 flex-shrink-0 font-mono opacity-20 group-hover:opacity-60 transition-opacity duration-300">
+              <span className="text-xs w-6 flex-shrink-0 font-mono opacity-40 dark:opacity-20 group-hover:opacity-60 transition-opacity duration-300">
                 {String(reversed.length - i).padStart(2, "0")}
               </span>
 
               {/* Company + Role */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-xl laptop:text-3xl font-black uppercase tracking-tight leading-none opacity-25 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="text-xl laptop:text-3xl font-black uppercase tracking-tight leading-none opacity-40 dark:opacity-25 group-hover:opacity-100 transition-opacity duration-300">
                   {org.name}
                 </h3>
-                <p className="text-sm mt-1 opacity-15 group-hover:opacity-50 transition-opacity duration-300">
+                <p className="text-sm mt-1 opacity-35 dark:opacity-15 group-hover:opacity-50 transition-opacity duration-300">
                   {org.role}
                 </p>
               </div>
 
               {/* Period */}
-              <p className="text-xs w-28 flex-shrink-0 text-right font-mono opacity-15 group-hover:opacity-40 transition-opacity duration-300 hidden tablet:block">
+              <p className="text-xs w-28 flex-shrink-0 text-right font-mono opacity-35 dark:opacity-15 group-hover:opacity-40 transition-opacity duration-300 hidden tablet:block">
                 {org.period}
               </p>
 
               {/* Description */}
-              <p className="text-sm leading-relaxed flex-1 hidden laptop:block opacity-15 group-hover:opacity-55 transition-opacity duration-300">
+              <p className="text-sm leading-relaxed flex-1 hidden laptop:block opacity-35 dark:opacity-15 group-hover:opacity-55 transition-opacity duration-300">
                 {org.description}
               </p>
 
@@ -62,7 +62,7 @@ export default function WorkList({ organizations, isVisible }) {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="flex-shrink-0 opacity-30 group-hover:opacity-80 transition-opacity duration-300"
+                className="flex-shrink-0 opacity-40 dark:opacity-30 group-hover:opacity-80 transition-opacity duration-300"
                 animate={{ rotate: isOpen ? 180 : 0 }}
                 transition={{ duration: 0.3, ease: EASE }}
               >
